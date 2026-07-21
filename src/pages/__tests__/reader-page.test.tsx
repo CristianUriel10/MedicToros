@@ -1,8 +1,20 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { PublicationsProvider } from '../../context/publications-context'
 import { ReaderPage } from '../reader-page'
+
+vi.mock('../../services/firebase/config', () => ({
+  isFirebaseConfigured: () => false,
+  getFirebaseConfig: () => ({
+    apiKey: '',
+    authDomain: '',
+    projectId: '',
+    storageBucket: '',
+    messagingSenderId: '',
+    appId: '',
+  }),
+}))
 
 /**
  * Wrapper de prueba con router y contexto de publicaciones
