@@ -8,6 +8,17 @@ export function formatStorageUploadError(error: unknown): string {
   const normalized = message.toLowerCase()
 
   if (
+    normalized.includes('missing or insufficient permissions') ||
+    normalized.includes('permission_denied') ||
+    normalized.includes('permission denied')
+  ) {
+    return (
+      'Firestore no permite eliminar. En Firebase Console → Firestore → Reglas, ' +
+      'publica el contenido de firebase/firestore.rules (debe incluir allow delete: if true).'
+    )
+  }
+
+  if (
     normalized.includes('row-level security') ||
     normalized.includes('row level security') ||
     normalized.includes('violates row-level security')
