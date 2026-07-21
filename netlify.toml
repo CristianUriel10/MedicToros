@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# React Router: rutas como /articulos/:id deben servir index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
