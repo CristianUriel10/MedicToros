@@ -3,6 +3,8 @@ import { getFirestore, type Firestore } from 'firebase/firestore'
 import { getStorage, type FirebaseStorage } from 'firebase/storage'
 import { getFirebaseConfig, isFirebaseConfigured } from './config'
 
+export { isFirebaseConfigured }
+
 let firebaseApp: FirebaseApp | undefined
 let firestoreDb: Firestore | undefined
 let firebaseStorage: FirebaseStorage | undefined
@@ -45,4 +47,19 @@ export function getFirebaseStorage(): FirebaseStorage {
   }
 
   return firebaseStorage
+}
+
+/**
+ * Inicializa Firestore y Storage al arrancar la app cuando hay .env configurado
+ * @returns {string | null} ID del proyecto conectado o null en modo demo
+ */
+export function connectFirebase(): string | null {
+  if (!isFirebaseConfigured()) {
+    return null
+  }
+
+  getFirestoreDb()
+  getFirebaseStorage()
+
+  return getFirebaseConfig().projectId
 }

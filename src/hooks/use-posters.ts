@@ -36,14 +36,14 @@ export function usePosters(): UsePostersResult {
         '../services/firebase/posters-service'
       )
       const remotePosters = await fetchPostersFromFirestore()
-      setPosters(remotePosters.length > 0 ? remotePosters : samplePosters)
+      setPosters(remotePosters)
     } catch (loadError) {
       const message =
         loadError instanceof Error
           ? loadError.message
           : 'No se pudieron cargar los carteles desde Firestore.'
       setError(message)
-      setPosters(samplePosters)
+      setPosters([])
     } finally {
       setIsLoading(false)
     }

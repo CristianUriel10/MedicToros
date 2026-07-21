@@ -12,9 +12,8 @@
 
 ## Pendientes
 
-- [ ] Instalar dependencia `firebase` (`npm install`)
-- [ ] Configurar proyecto en Firebase Console y archivo `.env`
-- [ ] Desplegar reglas de `firebase/firestore.rules` y `firebase/storage.rules`
+- [ ] Desplegar reglas de `firebase/firestore.rules` y `firebase/storage.rules` en Firebase Console
+- [ ] Configurar las mismas variables `VITE_FIREBASE_*` en el hosting al desplegar
 - [ ] Autenticación de usuarios investigadores
 - [ ] Configurar CI/CD
 

@@ -32,7 +32,11 @@ export function PublicationsProvider({ children }: { children: ReactNode }) {
     isFirebaseEnabled,
     uploadJournal,
   } = useJournals()
-  const { posters, isLoading: isLoadingPosters } = usePosters()
+  const {
+    posters,
+    isLoading: isLoadingPosters,
+    error: postersError,
+  } = usePosters()
 
   const value: PublicationsContextValue = {
     articles: journals,
@@ -40,7 +44,7 @@ export function PublicationsProvider({ children }: { children: ReactNode }) {
     isLoadingArticles: isLoading,
     isLoadingPosters,
     isUploading,
-    error,
+    error: error ?? postersError,
     isFirebaseEnabled,
     uploadArticle: uploadJournal,
     findArticle: (id) => journals.find((article) => article.id === id),

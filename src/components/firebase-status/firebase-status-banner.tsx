@@ -1,3 +1,5 @@
+import { getFirebaseConfig } from '../../services/firebase/config'
+
 interface FirebaseStatusBannerProps {
   isFirebaseEnabled: boolean
   error: string | null
@@ -24,9 +26,11 @@ export function FirebaseStatusBanner({
   }
 
   if (isFirebaseEnabled) {
+    const projectId = getFirebaseConfig().projectId
+
     return (
       <div className="bg-green-900/80 px-4 py-2 text-center text-xs text-green-200">
-        Conectado a Firebase — artículos y PDF persistentes en la nube
+        Conectado a Firebase ({projectId}) — datos desde Firestore y PDFs en Storage
       </div>
     )
   }
