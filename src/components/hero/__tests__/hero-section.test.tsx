@@ -25,6 +25,6 @@ describe('HeroSection', () => {
   it('renders the bull logo', () => {
     render(<HeroSection />)
 
-    expect(screen.getByAltText(/logo medictoros/i)).toBeInTheDocument()
+    expect(screen.getByAltText(/logo del toro médico/i)).toBeInTheDocument()
   })
 })

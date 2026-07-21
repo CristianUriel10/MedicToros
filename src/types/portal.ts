@@ -7,7 +7,7 @@ export interface EditorialMember {
   id: string
   name: string
   role: string
-  photoUrl: string
+  initials: string
 }
 
 export interface SubmissionFeature {
@@ -57,6 +57,32 @@ export interface UploadJournalInput {
   abstract: string
   file: File
 }
+
+export interface Poster {
+  id: string
+  title: string
+  category: string
+  event: string
+  abstract: string
+  publishedAt: string
+  fileName: string
+  fileSize: string
+  fileUrl: string
+}
+
+export interface PosterDocument {
+  title: string
+  category: string
+  event: string
+  abstract: string
+  publishedAt: string
+  fileName: string
+  fileSize: string
+  fileUrl: string
+  storagePath: string
+}
+
+export type PublicationKind = 'articulos' | 'carteles'
 
 export const journalCategories = [
   'Medicina General',

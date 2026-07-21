@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react'
-import { categoryCoverImages, defaultCoverImage } from '../data/portal-data'
 import { sampleJournals } from '../data/sample-journals'
 import { isFirebaseConfigured } from '../services/firebase/config'
 import type { MedicalJournal, UploadJournalInput } from '../types/portal'
@@ -93,7 +92,6 @@ export function useJournals(): UseJournalsResult {
           fileName: input.file.name,
           fileSize: formatFileSize(input.file.size),
           fileUrl: URL.createObjectURL(input.file),
-          coverImage: categoryCoverImages[input.category] ?? defaultCoverImage,
         }
 
         setJournals((current) => [localJournal, ...current])

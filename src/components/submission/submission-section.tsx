@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { submissionFeatures } from '../../data/portal-data'
-import type { SubmissionFeature, UploadJournalInput } from '../../types/portal'
+import { journalCategories, type SubmissionFeature, type UploadJournalInput } from '../../types/portal'
 import { formatFileSize } from '../../utils/format-file-size'
-import { journalCategories } from '../../types/portal'
+import { PublicationCover } from '../publication-cover/publication-cover'
 import { PrimaryButton } from '../ui/primary-button'
 import { SectionLabel } from '../ui/section-label'
 
@@ -90,10 +90,10 @@ export function SubmissionSection({
       <div className="mx-auto max-w-7xl">
         <div className="grid items-start gap-12 lg:grid-cols-[1fr_1.2fr]">
           <div className="overflow-hidden rounded-sm">
-            <img
-              src="https://images.unsplash.com/photo-1532187863486-abf9dbad1a84?w=800&h=900&fit=crop"
-              alt="Investigadora en laboratorio"
-              className="h-72 w-full object-cover lg:h-full lg:min-h-[480px]"
+            <PublicationCover
+              category="Investigación Clínica"
+              label="Investigación clínica"
+              className="h-72 lg:min-h-[480px] lg:h-full"
             />
           </div>
 

@@ -1,3 +1,4 @@
+import { samplePdfUrl } from './visual-theme'
 import type { MedicalJournal } from '../types/portal'
 
 export const sampleJournals: MedicalJournal[] = [
@@ -12,9 +13,7 @@ export const sampleJournals: MedicalJournal[] = [
     publishedAt: '2026-03-15',
     fileName: 'hipertension-vol12.pdf',
     fileSize: '2.4 MB',
-    fileUrl: '',
-    coverImage:
-      'https://images.unsplash.com/photo-1628348068343-c6a848d2f1d0?w=800&h=600&fit=crop',
+    fileUrl: samplePdfUrl,
   },
   {
     id: 'journal-2',
@@ -27,9 +26,7 @@ export const sampleJournals: MedicalJournal[] = [
     publishedAt: '2026-02-08',
     fileName: 'biomarcadores-pulmon-vol8.pdf',
     fileSize: '3.1 MB',
-    fileUrl: '',
-    coverImage:
-      'https://images.unsplash.com/photo-1576086213369-97a306d36557?w=800&h=600&fit=crop',
+    fileUrl: samplePdfUrl,
   },
   {
     id: 'journal-3',
@@ -42,9 +39,7 @@ export const sampleJournals: MedicalJournal[] = [
     publishedAt: '2026-01-22',
     fileName: 'telemedicina-rural-vol5.pdf',
     fileSize: '1.8 MB',
-    fileUrl: '',
-    coverImage:
-      'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&h=600&fit=crop',
+    fileUrl: samplePdfUrl,
   },
   {
     id: 'journal-4',
@@ -57,8 +52,6 @@ export const sampleJournals: MedicalJournal[] = [
     publishedAt: '2025-12-10',
     fileName: 'neuroplasticidad-vol15.pdf',
     fileSize: '2.9 MB',
-    fileUrl: '',
-    coverImage:
-      'https://images.unsplash.com/photo-1559757175-57066e9477a0?w=800&h=600&fit=crop',
+    fileUrl: samplePdfUrl,
   },
 ]

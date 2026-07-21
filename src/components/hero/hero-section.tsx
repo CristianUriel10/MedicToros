@@ -1,3 +1,4 @@
+import { BrandLogo } from '../ui/brand-logo'
 import { EkgLine } from '../ui/ekg-line'
 import { PrimaryButton } from '../ui/primary-button'
 
@@ -34,11 +35,11 @@ export function HeroSection() {
           </div>
         </div>
 
-        <div className="flex justify-center lg:justify-end">
-          <img
-            src="/assets/bull-logo.png"
-            alt="Logo MedicToros - Toro formado por iconos médicos"
-            className="w-full max-w-md object-contain drop-shadow-2xl lg:max-w-lg"
+        <div className="flex justify-center bg-navy-900 lg:justify-end">
+          <BrandLogo
+            variant="bull"
+            surface="dark"
+            className="w-full max-w-md drop-shadow-2xl lg:max-w-lg"
           />
         </div>
       </div>

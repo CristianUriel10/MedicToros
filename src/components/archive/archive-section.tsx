@@ -1,3 +1,4 @@
+import { BrandLogo } from '../ui/brand-logo'
 import { PrimaryButton } from '../ui/primary-button'
 import { SectionLabel } from '../ui/section-label'
 
@@ -30,12 +31,10 @@ export function ArchiveSection() {
           <div className="relative w-full max-w-md">
             <div className="absolute -left-4 top-8 h-56 w-40 rotate-[-8deg] rounded-sm bg-navy-800 shadow-2xl" />
             <div className="absolute left-8 top-4 h-56 w-40 rotate-[-3deg] rounded-sm bg-navy-700 shadow-2xl" />
-            <div className="relative z-10 overflow-hidden rounded-sm bg-white shadow-2xl">
-              <img
-                src="/assets/bull-logo.png"
-                alt="Portada MedicToros"
-                className="h-64 w-full object-contain bg-navy-900 p-8"
-              />
+            <div className="relative z-10 overflow-hidden rounded-sm bg-navy-900 shadow-2xl">
+              <div className="flex items-center justify-center bg-navy-900 p-8">
+                <BrandLogo variant="bull" surface="dark" className="h-52 w-52" />
+              </div>
               <div className="bg-navy-900 px-6 py-4 text-center">
                 <p className="font-display text-xl font-bold uppercase tracking-wider text-white">
                   MedicToros

@@ -1,6 +1,16 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { navLinks } from '../../data/portal-data'
-import { PrimaryButton } from '../ui/primary-button'
+import { BrandLogo } from '../ui/brand-logo'
+
+/**
+ * Resuelve enlaces internos para funcionar desde cualquier ruta
+ * @param href - Enlace del menú
+ * @returns {string} URL compatible con React Router
+ */
+function resolveNavHref(href: string): string {
+  return href.startsWith('#') ? `/${href}` : href
+}
 
 /**
  * Barra de navegación principal al estilo MedicToros
@@ -12,13 +22,9 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-navy-900/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-4 lg:px-10">
-        <a href="#inicio" className="shrink-0">
-          <img
-            src="/assets/logo-text.png"
-            alt="MedicToros - Revista de investigación médica"
-            className="h-12 w-auto object-contain brightness-0 invert md:h-14"
-          />
-        </a>
+        <Link to="/" className="shrink-0">
+          <BrandLogo variant="wordmark" surface="dark" />
+        </Link>
 
         <nav
           className="hidden items-center gap-6 xl:flex"
@@ -27,17 +33,13 @@ export function Header() {
           {navLinks.map((link) => (
             <a
               key={link.href}
-              href={link.href}
+              href={resolveNavHref(link.href)}
               className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80 transition-colors hover:text-white"
             >
               {link.label}
             </a>
           ))}
         </nav>
-
-        <div className="hidden items-center gap-4 md:flex">
-          <PrimaryButton href="#suscripcion">Suscríbete</PrimaryButton>
-        </div>
 
         <button
           type="button"
@@ -63,7 +65,7 @@ export function Header() {
             {navLinks.map((link) => (
               <li key={link.href}>
                 <a
-                  href={link.href}
+                  href={resolveNavHref(link.href)}
                   className="block text-sm font-semibold uppercase tracking-wider text-white/80"
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -71,9 +73,6 @@ export function Header() {
                 </a>
               </li>
             ))}
-            <li>
-              <PrimaryButton href="#suscripcion">Suscríbete</PrimaryButton>
-            </li>
           </ul>
         </nav>
       )}

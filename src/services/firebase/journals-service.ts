@@ -10,7 +10,6 @@ import {
 } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import type { JournalDocument, MedicalJournal, UploadJournalInput } from '../../types/portal'
-import { categoryCoverImages, defaultCoverImage } from '../../data/portal-data'
 import { formatFileSize } from '../../utils/format-file-size'
 import { sanitizeFileName } from '../../utils/sanitize-file-name'
 import { getFirebaseStorage, getFirestoreDb } from './firebase-client'
@@ -72,7 +71,6 @@ export async function uploadJournalToFirestore(
   const safeFileName = sanitizeFileName(input.file.name)
   const storagePath = `journals/${journalId}/${safeFileName}`
   const publishedAt = new Date().toISOString().split('T')[0] ?? ''
-  const coverImage = categoryCoverImages[input.category] ?? defaultCoverImage
 
   const storageRef = ref(storage, storagePath)
   await uploadBytes(storageRef, input.file, {
@@ -91,7 +89,6 @@ export async function uploadJournalToFirestore(
     fileSize: formatFileSize(input.file.size),
     fileUrl,
     storagePath,
-    coverImage,
     createdAt: serverTimestamp(),
   }
 
@@ -108,6 +105,5 @@ export async function uploadJournalToFirestore(
     fileName: journalData.fileName,
     fileSize: journalData.fileSize,
     fileUrl: journalData.fileUrl,
-    coverImage: journalData.coverImage,
   }
 }

@@ -17,12 +17,10 @@ export function EditorialTeamSection() {
         <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {editorialTeam.map((member) => (
             <article key={member.id} className="text-center">
-              <div className="mx-auto overflow-hidden rounded-sm">
-                <img
-                  src={member.photoUrl}
-                  alt={member.name}
-                  className="aspect-[3/4] w-full object-cover"
-                />
+              <div className="mx-auto flex aspect-[3/4] max-w-[220px] items-center justify-center rounded-sm bg-gradient-to-br from-navy-700 to-accent-700">
+                <span className="font-display text-4xl font-bold text-white/90">
+                  {member.initials}
+                </span>
               </div>
               <h3 className="mt-4 text-base font-semibold text-white">{member.name}</h3>
               <p className="mt-1 text-sm text-white/50">{member.role}</p>

@@ -1,4 +1,4 @@
-import { useJournals } from '../hooks/use-journals'
+import { usePublications } from '../context/publications-context'
 import { ArticlesSection } from '../components/articles/articles-section'
 import { ArchiveSection } from '../components/archive/archive-section'
 import { EditorialTeamSection } from '../components/editorial-team/editorial-team-section'
@@ -6,8 +6,8 @@ import { FirebaseStatusBanner } from '../components/firebase-status/firebase-sta
 import { Footer } from '../components/footer/footer'
 import { Header } from '../components/header/header'
 import { HeroSection } from '../components/hero/hero-section'
+import { PostersSection } from '../components/posters/posters-section'
 import { SubmissionSection } from '../components/submission/submission-section'
-import { SubscriptionSection } from '../components/subscription/subscription-section'
 
 /**
  * Página principal del portal MedicToros
@@ -15,13 +15,15 @@ import { SubscriptionSection } from '../components/subscription/subscription-sec
  */
 export function PortalPage() {
   const {
-    journals,
-    isLoading,
+    articles,
+    posters,
+    isLoadingArticles,
+    isLoadingPosters,
     isUploading,
     error,
     isFirebaseEnabled,
-    uploadJournal,
-  } = useJournals()
+    uploadArticle,
+  } = usePublications()
 
   return (
     <div className="min-h-screen bg-navy-900">
@@ -32,15 +34,15 @@ export function PortalPage() {
       />
       <main>
         <HeroSection />
-        <ArticlesSection journals={journals} isLoading={isLoading} />
+        <ArticlesSection journals={articles} isLoading={isLoadingArticles} />
+        <PostersSection posters={posters} isLoading={isLoadingPosters} />
         <ArchiveSection />
         <SubmissionSection
-          onUpload={uploadJournal}
+          onUpload={uploadArticle}
           isUploading={isUploading}
           isFirebaseEnabled={isFirebaseEnabled}
         />
         <EditorialTeamSection />
-        <SubscriptionSection />
       </main>
       <Footer />
     </div>
