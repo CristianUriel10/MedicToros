@@ -3,6 +3,7 @@ import { samplePosters } from '../data/sample-posters'
 import { isFirebaseConfigured } from '../services/firebase/config'
 import type { Poster, UploadPosterInput } from '../types/portal'
 import { formatFileSize } from '../utils/format-file-size'
+import { formatStorageUploadError } from '../utils/format-storage-upload-error'
 
 interface UsePostersResult {
   posters: Poster[]
@@ -125,10 +126,7 @@ export function usePosters(): UsePostersResult {
 
         setPosters((current) => current.filter((poster) => poster.id !== posterId))
       } catch (deleteError) {
-        const message =
-          deleteError instanceof Error
-            ? deleteError.message
-            : 'No se pudo eliminar el cartel.'
+        const message = formatStorageUploadError(deleteError)
         setError(message)
         throw deleteError
       } finally {

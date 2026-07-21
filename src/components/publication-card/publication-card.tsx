@@ -58,7 +58,11 @@ export function PublicationCard({
         <button
           type="button"
           disabled={isDeleting}
-          onClick={onDelete}
+          onClick={(event) => {
+            event.preventDefault()
+            event.stopPropagation()
+            onDelete()
+          }}
           className="absolute right-3 top-3 z-10 rounded-sm border border-accent-500/40 bg-navy-950/90 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-accent-500 transition-colors hover:bg-accent-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isDeleting ? 'Eliminando...' : 'Eliminar'}

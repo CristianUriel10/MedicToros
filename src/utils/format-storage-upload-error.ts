@@ -1,6 +1,6 @@
 /**
- * Traduce errores comunes de subida a Storage en mensajes accionables
- * @param error - Error capturado al subir PDF
+ * Traduce errores comunes de Storage en mensajes accionables
+ * @param error - Error capturado al subir o eliminar PDF
  * @returns {string} Mensaje para mostrar al usuario
  */
 export function formatStorageUploadError(error: unknown): string {
@@ -29,5 +29,5 @@ export function formatStorageUploadError(error: unknown): string {
     )
   }
 
-  return message || 'No se pudo subir el archivo PDF.'
+  return message || 'No se pudo completar la operación con el archivo PDF.'
 }

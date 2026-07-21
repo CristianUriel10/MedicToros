@@ -118,10 +118,15 @@ export async function deleteJournalFromFirestore(journalId: string): Promise<voi
   }
 
   const journal = snapshot.data() as JournalDocument
-
-  if (journal.storagePath) {
-    await deletePdfFile(journal.storagePath)
-  }
+  const storagePath = journal.storagePath
 
   await deleteDoc(journalRef)
+
+  if (storagePath) {
+    try {
+      await deletePdfFile(storagePath)
+    } catch {
+      // Reason: el catálogo ya se actualizó; no bloquear si falla la limpieza del PDF
+    }
+  }
 }

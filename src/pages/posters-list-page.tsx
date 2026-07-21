@@ -2,6 +2,7 @@ import { usePublications } from '../context/publications-context'
 import { PublicationCard } from '../components/publication-card/publication-card'
 import { PageShell } from '../components/layout/page-shell'
 import { confirmDeletePublication } from '../utils/confirm-delete-publication'
+import { formatStorageUploadError } from '../utils/format-storage-upload-error'
 
 /**
  * Página completa del catálogo de carteles
@@ -21,7 +22,11 @@ export function PostersListPage() {
       return
     }
 
-    await deletePoster(id)
+    try {
+      await deletePoster(id)
+    } catch (deleteError) {
+      window.alert(formatStorageUploadError(deleteError))
+    }
   }
 
   return (

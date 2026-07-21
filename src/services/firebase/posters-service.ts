@@ -112,10 +112,15 @@ export async function deletePosterFromFirestore(posterId: string): Promise<void>
   }
 
   const poster = snapshot.data() as PosterDocument
-
-  if (poster.storagePath) {
-    await deletePdfFile(poster.storagePath)
-  }
+  const storagePath = poster.storagePath
 
   await deleteDoc(posterRef)
+
+  if (storagePath) {
+    try {
+      await deletePdfFile(storagePath)
+    } catch {
+      // Reason: el catálogo ya se actualizó; no bloquear si falla la limpieza del PDF
+    }
+  }
 }

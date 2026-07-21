@@ -1,5 +1,6 @@
 import { usePublications } from '../../context/publications-context'
 import { confirmDeletePublication } from '../../utils/confirm-delete-publication'
+import { formatStorageUploadError } from '../../utils/format-storage-upload-error'
 import { PublicationCard } from '../publication-card/publication-card'
 import { PrimaryButton } from '../ui/primary-button'
 import { SectionLabel } from '../ui/section-label'
@@ -24,7 +25,11 @@ export function PostersSection({ posters, isLoading = false }: PostersSectionPro
       return
     }
 
-    await deletePoster(poster.id)
+    try {
+      await deletePoster(poster.id)
+    } catch (deleteError) {
+      window.alert(formatStorageUploadError(deleteError))
+    }
   }
 
   return (

@@ -2,6 +2,7 @@ import { usePublications } from '../context/publications-context'
 import { PublicationCard } from '../components/publication-card/publication-card'
 import { PageShell } from '../components/layout/page-shell'
 import { confirmDeletePublication } from '../utils/confirm-delete-publication'
+import { formatStorageUploadError } from '../utils/format-storage-upload-error'
 
 /**
  * Página completa del catálogo de artículos
@@ -21,7 +22,11 @@ export function ArticlesListPage() {
       return
     }
 
-    await deleteArticle(id)
+    try {
+      await deleteArticle(id)
+    } catch (deleteError) {
+      window.alert(formatStorageUploadError(deleteError))
+    }
   }
 
   return (
