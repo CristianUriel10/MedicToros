@@ -1,3 +1,5 @@
+import { usePublications } from '../../context/publications-context'
+import { confirmDeletePublication } from '../../utils/confirm-delete-publication'
 import { PublicationCard } from '../publication-card/publication-card'
 import { PrimaryButton } from '../ui/primary-button'
 import { SectionLabel } from '../ui/section-label'
@@ -14,7 +16,16 @@ interface ArticlesSectionProps {
  * @returns {JSX.Element} Grid de artículos destacados
  */
 export function ArticlesSection({ journals, isLoading = false }: ArticlesSectionProps) {
+  const { isUploadUnlocked, isDeleting, deleteArticle } = usePublications()
   const featuredJournals = journals.slice(0, 3)
+
+  const handleDelete = async (journal: MedicalJournal) => {
+    if (!confirmDeletePublication(journal.title)) {
+      return
+    }
+
+    await deleteArticle(journal.id)
+  }
 
   return (
     <section id="articulos" className="bg-navy-900 px-6 py-20 lg:px-10 lg:py-24">
@@ -41,6 +52,9 @@ export function ArticlesSection({ journals, isLoading = false }: ArticlesSection
                   meta={journal.issue}
                   readPath={`/articulos/${journal.id}`}
                   hasPdf={Boolean(journal.fileUrl)}
+                  canDelete={isUploadUnlocked}
+                  isDeleting={isDeleting}
+                  onDelete={() => void handleDelete(journal)}
                 />
               ))}
             </div>

@@ -1,3 +1,5 @@
+import { usePublications } from '../../context/publications-context'
+import { confirmDeletePublication } from '../../utils/confirm-delete-publication'
 import { PublicationCard } from '../publication-card/publication-card'
 import { PrimaryButton } from '../ui/primary-button'
 import { SectionLabel } from '../ui/section-label'
@@ -14,7 +16,16 @@ interface PostersSectionProps {
  * @returns {JSX.Element} Grid de carteles destacados
  */
 export function PostersSection({ posters, isLoading = false }: PostersSectionProps) {
+  const { isUploadUnlocked, isDeleting, deletePoster } = usePublications()
   const featuredPosters = posters.slice(0, 3)
+
+  const handleDelete = async (poster: Poster) => {
+    if (!confirmDeletePublication(poster.title)) {
+      return
+    }
+
+    await deletePoster(poster.id)
+  }
 
   return (
     <section id="carteles" className="bg-navy-800 px-6 py-20 lg:px-10 lg:py-24">
@@ -45,6 +56,9 @@ export function PostersSection({ posters, isLoading = false }: PostersSectionPro
                   meta={poster.event}
                   readPath={`/carteles/${poster.id}`}
                   hasPdf={Boolean(poster.fileUrl)}
+                  canDelete={isUploadUnlocked}
+                  isDeleting={isDeleting}
+                  onDelete={() => void handleDelete(poster)}
                 />
               ))}
             </div>

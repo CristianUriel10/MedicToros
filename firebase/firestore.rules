@@ -5,13 +5,15 @@ service cloud.firestore {
     match /journals/{journalId} {
       allow read: if true;
       allow create: if true;
-      allow update, delete: if false;
+      allow update: if false;
+      allow delete: if true;
     }
 
     match /posters/{posterId} {
       allow read: if true;
       allow create: if true;
-      allow update, delete: if false;
+      allow update: if false;
+      allow delete: if true;
     }
   }
 }

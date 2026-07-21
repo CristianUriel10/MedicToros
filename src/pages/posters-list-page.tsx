@@ -1,13 +1,28 @@
 import { usePublications } from '../context/publications-context'
 import { PublicationCard } from '../components/publication-card/publication-card'
 import { PageShell } from '../components/layout/page-shell'
+import { confirmDeletePublication } from '../utils/confirm-delete-publication'
 
 /**
  * Página completa del catálogo de carteles
  * @returns {JSX.Element} Listado de carteles científicos
  */
 export function PostersListPage() {
-  const { posters, isLoadingPosters } = usePublications()
+  const {
+    posters,
+    isLoadingPosters,
+    isUploadUnlocked,
+    isDeleting,
+    deletePoster,
+  } = usePublications()
+
+  const handleDelete = async (title: string, id: string) => {
+    if (!confirmDeletePublication(title)) {
+      return
+    }
+
+    await deletePoster(id)
+  }
 
   return (
     <PageShell
@@ -32,6 +47,9 @@ export function PostersListPage() {
               meta={poster.event}
               readPath={`/carteles/${poster.id}`}
               hasPdf={Boolean(poster.fileUrl)}
+              canDelete={isUploadUnlocked}
+              isDeleting={isDeleting}
+              onDelete={() => void handleDelete(poster.title, poster.id)}
             />
           ))}
         </div>

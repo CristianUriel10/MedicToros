@@ -1,6 +1,7 @@
 import { createContext, useContext, type ReactNode } from 'react'
 import { useJournals } from '../hooks/use-journals'
 import { usePosters } from '../hooks/use-posters'
+import { useUploadAccess } from '../hooks/use-upload-access'
 import type { MedicalJournal, Poster } from '../types/portal'
 
 interface PublicationsContextValue {
@@ -9,9 +10,17 @@ interface PublicationsContextValue {
   isLoadingArticles: boolean
   isLoadingPosters: boolean
   isUploading: boolean
+  isDeleting: boolean
   error: string | null
   isFirebaseEnabled: boolean
+  isUploadPasswordRequired: boolean
+  isUploadUnlocked: boolean
+  unlockUpload: (password: string) => boolean
+  lockUpload: () => void
   uploadArticle: ReturnType<typeof useJournals>['uploadJournal']
+  uploadPoster: ReturnType<typeof usePosters>['uploadPoster']
+  deleteArticle: ReturnType<typeof useJournals>['deleteJournal']
+  deletePoster: ReturnType<typeof usePosters>['deletePoster']
   findArticle: (id: string) => MedicalJournal | undefined
   findPoster: (id: string) => Poster | undefined
 }
@@ -27,26 +36,46 @@ export function PublicationsProvider({ children }: { children: ReactNode }) {
   const {
     journals,
     isLoading,
-    isUploading,
+    isUploading: isUploadingArticle,
+    isDeleting: isDeletingArticle,
     error,
     isFirebaseEnabled,
     uploadJournal,
+    deleteJournal,
   } = useJournals()
   const {
     posters,
     isLoading: isLoadingPosters,
+    isUploading: isUploadingPoster,
+    isDeleting: isDeletingPoster,
     error: postersError,
+    uploadPoster,
+    deletePoster,
   } = usePosters()
+  const {
+    isUploadPasswordRequired,
+    isUploadUnlocked,
+    unlockUpload,
+    lockUpload,
+  } = useUploadAccess()
 
   const value: PublicationsContextValue = {
     articles: journals,
     posters,
     isLoadingArticles: isLoading,
     isLoadingPosters,
-    isUploading,
+    isUploading: isUploadingArticle || isUploadingPoster,
+    isDeleting: isDeletingArticle || isDeletingPoster,
     error: error ?? postersError,
     isFirebaseEnabled,
+    isUploadPasswordRequired,
+    isUploadUnlocked,
+    unlockUpload,
+    lockUpload,
     uploadArticle: uploadJournal,
+    uploadPoster,
+    deleteArticle: deleteJournal,
+    deletePoster,
     findArticle: (id) => journals.find((article) => article.id === id),
     findPoster: (id) => posters.find((poster) => poster.id === id),
   }

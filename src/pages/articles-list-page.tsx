@@ -1,13 +1,28 @@
 import { usePublications } from '../context/publications-context'
 import { PublicationCard } from '../components/publication-card/publication-card'
 import { PageShell } from '../components/layout/page-shell'
+import { confirmDeletePublication } from '../utils/confirm-delete-publication'
 
 /**
  * Página completa del catálogo de artículos
  * @returns {JSX.Element} Listado de investigación actual
  */
 export function ArticlesListPage() {
-  const { articles, isLoadingArticles } = usePublications()
+  const {
+    articles,
+    isLoadingArticles,
+    isUploadUnlocked,
+    isDeleting,
+    deleteArticle,
+  } = usePublications()
+
+  const handleDelete = async (title: string, id: string) => {
+    if (!confirmDeletePublication(title)) {
+      return
+    }
+
+    await deleteArticle(id)
+  }
 
   return (
     <PageShell
@@ -32,6 +47,9 @@ export function ArticlesListPage() {
               meta={journal.issue}
               readPath={`/articulos/${journal.id}`}
               hasPdf={Boolean(journal.fileUrl)}
+              canDelete={isUploadUnlocked}
+              isDeleting={isDeleting}
+              onDelete={() => void handleDelete(journal.title, journal.id)}
             />
           ))}
         </div>

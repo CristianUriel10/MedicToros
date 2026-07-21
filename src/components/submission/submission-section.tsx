@@ -1,11 +1,17 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { usePublications } from '../../context/publications-context'
 import { submissionFeatures } from '../../data/portal-data'
-import { journalCategories, type SubmissionFeature, type UploadJournalInput } from '../../types/portal'
-import { formatFileSize } from '../../utils/format-file-size'
+import { journalCategories, posterCategories, type SubmissionFeature } from '../../types/portal'
 import { PublicationCover } from '../publication-cover/publication-cover'
 import { PrimaryButton } from '../ui/primary-button'
 import { SectionLabel } from '../ui/section-label'
+import {
+  ArticleUploadForm,
+  type ArticleFormState,
+} from './article-upload-form'
+import { PosterUploadForm, type PosterFormState } from './poster-upload-form'
+import { SubmissionAccessForm } from './submission-access-form'
 
 const featureIcons: Record<SubmissionFeature['icon'], string> = {
   review: '◎',
@@ -14,21 +20,9 @@ const featureIcons: Record<SubmissionFeature['icon'], string> = {
   access: '↗',
 }
 
-interface UploadFormState {
-  title: string
-  authors: string
-  category: string
-  issue: string
-  abstract: string
-}
+type SubmissionTab = 'articulo' | 'cartel'
 
-interface SubmissionSectionProps {
-  onUpload: (input: UploadJournalInput) => Promise<void>
-  isUploading?: boolean
-  isFirebaseEnabled?: boolean
-}
-
-const initialFormState: UploadFormState = {
+const initialArticleForm: ArticleFormState = {
   title: '',
   authors: '',
   category: journalCategories[0],
@@ -36,52 +30,147 @@ const initialFormState: UploadFormState = {
   abstract: '',
 }
 
+const initialPosterForm: PosterFormState = {
+  title: '',
+  category: posterCategories[0],
+  event: '',
+  abstract: '',
+}
+
 /**
- * Sección de envío de trabajos con formulario de subida
- * @param props - Callback de publicación y estado de carga
+ * Sección de envío editorial con subida de artículos y carteles
  * @returns {JSX.Element} Bloque de envío de investigación
  */
-export function SubmissionSection({
-  onUpload,
-  isUploading = false,
-  isFirebaseEnabled = false,
-}: SubmissionSectionProps) {
-  const [formData, setFormData] = useState<UploadFormState>(initialFormState)
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [showForm, setShowForm] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
-  const [isSubmitted, setIsSubmitted] = useState(false)
+export function SubmissionSection() {
+  const {
+    uploadArticle,
+    uploadPoster,
+    isUploading,
+    isFirebaseEnabled,
+    isUploadPasswordRequired,
+    isUploadUnlocked,
+    unlockUpload,
+    lockUpload,
+  } = usePublications()
 
-  const updateField = (field: keyof UploadFormState, value: string) => {
-    setFormData((current) => ({ ...current, [field]: value }))
+  const [activeTab, setActiveTab] = useState<SubmissionTab>('articulo')
+  const [articleForm, setArticleForm] = useState<ArticleFormState>(initialArticleForm)
+  const [posterForm, setPosterForm] = useState<PosterFormState>(initialPosterForm)
+  const [articleFile, setArticleFile] = useState<File | null>(null)
+  const [posterFile, setPosterFile] = useState<File | null>(null)
+  const [showPanel, setShowPanel] = useState(false)
+  const [editorPassword, setEditorPassword] = useState('')
+  const [accessErrorMessage, setAccessErrorMessage] = useState('')
+  const [articleError, setArticleError] = useState('')
+  const [posterError, setPosterError] = useState('')
+  const [articleSubmitted, setArticleSubmitted] = useState(false)
+  const [posterSubmitted, setPosterSubmitted] = useState(false)
+
+  const handleOpenPanel = () => {
+    setShowPanel(true)
+    setAccessErrorMessage('')
   }
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setErrorMessage('')
-    setIsSubmitted(false)
+  const handleClosePanel = () => {
+    setShowPanel(false)
+    setEditorPassword('')
+    setAccessErrorMessage('')
+    setArticleError('')
+    setPosterError('')
+    setArticleSubmitted(false)
+    setPosterSubmitted(false)
+  }
 
-    if (!selectedFile) {
-      setErrorMessage('Selecciona un archivo PDF para continuar.')
+  const handleAccessSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setAccessErrorMessage('')
+
+    if (unlockUpload(editorPassword)) {
+      setEditorPassword('')
       return
     }
 
-    if (selectedFile.type !== 'application/pdf') {
-      setErrorMessage('Solo se permiten archivos en formato PDF.')
+    setAccessErrorMessage('Contraseña incorrecta. Solo el equipo editorial puede continuar.')
+  }
+
+  const handleLockEditor = () => {
+    lockUpload()
+    handleClosePanel()
+  }
+
+  const ensureEditorAccess = (): boolean => {
+    if (isUploadPasswordRequired && !isUploadUnlocked) {
+      return false
+    }
+
+    return true
+  }
+
+  const validatePdfFile = (file: File | null): string | null => {
+    if (!file) {
+      return 'Selecciona un archivo PDF para continuar.'
+    }
+
+    if (file.type !== 'application/pdf') {
+      return 'Solo se permiten archivos en formato PDF.'
+    }
+
+    return null
+  }
+
+  const handleArticleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setArticleError('')
+    setArticleSubmitted(false)
+
+    if (!ensureEditorAccess()) {
+      setArticleError('Necesitas la contraseña editorial para publicar.')
+      return
+    }
+
+    const fileError = validatePdfFile(articleFile)
+    if (fileError) {
+      setArticleError(fileError)
       return
     }
 
     try {
-      await onUpload({ ...formData, file: selectedFile })
-      setFormData(initialFormState)
-      setSelectedFile(null)
-      setIsSubmitted(true)
+      await uploadArticle({ ...articleForm, file: articleFile! })
+      setArticleForm(initialArticleForm)
+      setArticleFile(null)
+      setArticleSubmitted(true)
     } catch (uploadError) {
       const message =
-        uploadError instanceof Error
-          ? uploadError.message
-          : 'No se pudo enviar el trabajo.'
-      setErrorMessage(message)
+        uploadError instanceof Error ? uploadError.message : 'No se pudo enviar el artículo.'
+      setArticleError(message)
+    }
+  }
+
+  const handlePosterSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setPosterError('')
+    setPosterSubmitted(false)
+
+    if (!ensureEditorAccess()) {
+      setPosterError('Necesitas la contraseña editorial para publicar.')
+      return
+    }
+
+    const fileError = validatePdfFile(posterFile)
+    if (fileError) {
+      setPosterError(fileError)
+      return
+    }
+
+    try {
+      await uploadPoster({ ...posterForm, file: posterFile! })
+      setPosterForm(initialPosterForm)
+      setPosterFile(null)
+      setPosterSubmitted(true)
+    } catch (uploadError) {
+      const message =
+        uploadError instanceof Error ? uploadError.message : 'No se pudo enviar el cartel.'
+      setPosterError(message)
     }
   }
 
@@ -103,98 +192,93 @@ export function SubmissionSection({
               Tu investigación puede hacer la diferencia
             </h2>
             <p className="mt-4 max-w-xl leading-relaxed text-white/70">
-              Publica tu artículo en MedicToros y contribuye al avance de la medicina
-              basada en evidencia.
+              Publica artículos y carteles en MedicToros. Solo el equipo editorial puede
+              subir o eliminar contenido con contraseña.
               {isFirebaseEnabled
-                ? ' Los PDF se almacenan en Firebase Storage y los metadatos en Firestore.'
+                ? ' Los PDF se guardan en Firebase Storage y los metadatos en Firestore.'
                 : ' Configura Firebase para persistir los envíos en la nube.'}
             </p>
 
-            {!showForm ? (
+            {!showPanel ? (
               <div className="mt-8">
-                <PrimaryButton onClick={() => setShowForm(true)}>
-                  Conoce las pautas de envío
+                <PrimaryButton onClick={handleOpenPanel}>
+                  Acceso editorial
                 </PrimaryButton>
               </div>
+            ) : isUploadPasswordRequired && !isUploadUnlocked ? (
+              <SubmissionAccessForm
+                editorPassword={editorPassword}
+                accessErrorMessage={accessErrorMessage}
+                onPasswordChange={setEditorPassword}
+                onSubmit={handleAccessSubmit}
+                onCancel={handleClosePanel}
+              />
             ) : (
-              <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
-                <input
-                  type="text"
-                  required
-                  disabled={isUploading}
-                  placeholder="Título del artículo *"
-                  value={formData.title}
-                  onChange={(event) => updateField('title', event.target.value)}
-                  className="w-full rounded-sm border border-white/10 bg-navy-900/50 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none focus:border-accent-500"
-                />
-                <input
-                  type="text"
-                  required
-                  disabled={isUploading}
-                  placeholder="Autor(es) *"
-                  value={formData.authors}
-                  onChange={(event) => updateField('authors', event.target.value)}
-                  className="w-full rounded-sm border border-white/10 bg-navy-900/50 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none focus:border-accent-500"
-                />
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <select
-                    required
-                    disabled={isUploading}
-                    value={formData.category}
-                    onChange={(event) => updateField('category', event.target.value)}
-                    className="w-full rounded-sm border border-white/10 bg-navy-900/50 px-4 py-3 text-sm text-white outline-none focus:border-accent-500"
+              <div className="mt-8">
+                <div className="mb-6 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('articulo')}
+                    className={`rounded-sm px-4 py-2 text-xs font-semibold uppercase tracking-wider ${
+                      activeTab === 'articulo'
+                        ? 'bg-accent-500 text-white'
+                        : 'border border-white/20 text-white/70'
+                    }`}
                   >
-                    {journalCategories.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </select>
-                  <input
-                    type="text"
-                    disabled={isUploading}
-                    placeholder="Vol. / Edición"
-                    value={formData.issue}
-                    onChange={(event) => updateField('issue', event.target.value)}
-                    className="w-full rounded-sm border border-white/10 bg-navy-900/50 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none focus:border-accent-500"
-                  />
+                    Artículo
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('cartel')}
+                    className={`rounded-sm px-4 py-2 text-xs font-semibold uppercase tracking-wider ${
+                      activeTab === 'cartel'
+                        ? 'bg-accent-500 text-white'
+                        : 'border border-white/20 text-white/70'
+                    }`}
+                  >
+                    Cartel
+                  </button>
                 </div>
-                <textarea
-                  required
-                  rows={3}
-                  disabled={isUploading}
-                  placeholder="Resumen *"
-                  value={formData.abstract}
-                  onChange={(event) => updateField('abstract', event.target.value)}
-                  className="w-full rounded-sm border border-white/10 bg-navy-900/50 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none focus:border-accent-500"
-                />
-                <input
-                  type="file"
-                  accept=".pdf,application/pdf"
-                  disabled={isUploading}
-                  aria-label="Archivo PDF"
-                  onChange={(event) => setSelectedFile(event.target.files?.[0] ?? null)}
-                  className="w-full text-sm text-white/70 file:mr-4 file:rounded-sm file:border-0 file:bg-accent-500 file:px-4 file:py-2 file:text-xs file:font-semibold file:uppercase file:text-white"
-                />
-                {selectedFile && (
-                  <p className="text-xs text-white/50">
-                    {selectedFile.name} — {formatFileSize(selectedFile.size)}
+
+                {activeTab === 'articulo' ? (
+                  <ArticleUploadForm
+                    formData={articleForm}
+                    selectedFile={articleFile}
+                    isUploading={isUploading}
+                    errorMessage={articleError}
+                    isSubmitted={articleSubmitted}
+                    showEditorLock={isUploadPasswordRequired}
+                    onFieldChange={(field, value) =>
+                      setArticleForm((current) => ({ ...current, [field]: value }))
+                    }
+                    onFileChange={setArticleFile}
+                    onSubmit={handleArticleSubmit}
+                    onLockEditor={handleLockEditor}
+                  />
+                ) : (
+                  <PosterUploadForm
+                    formData={posterForm}
+                    selectedFile={posterFile}
+                    isUploading={isUploading}
+                    errorMessage={posterError}
+                    isSubmitted={posterSubmitted}
+                    showEditorLock={isUploadPasswordRequired}
+                    onFieldChange={(field, value) =>
+                      setPosterForm((current) => ({ ...current, [field]: value }))
+                    }
+                    onFileChange={setPosterFile}
+                    onSubmit={handlePosterSubmit}
+                    onLockEditor={handleLockEditor}
+                  />
+                )}
+
+                {isUploadUnlocked && (
+                  <p className="mt-4 text-xs text-green-300">
+                    Acceso editorial activo. También puedes eliminar publicaciones desde
+                    las tarjetas del catálogo.
                   </p>
                 )}
-                {errorMessage && (
-                  <p className="text-sm text-accent-500" role="alert">
-                    {errorMessage}
-                  </p>
-                )}
-                <PrimaryButton type="submit" disabled={isUploading}>
-                  {isUploading ? 'Enviando...' : 'Publicar artículo'}
-                </PrimaryButton>
-                {isSubmitted && (
-                  <p className="text-sm text-green-400" role="status">
-                    ¡Trabajo enviado correctamente!
-                  </p>
-                )}
-              </form>
+              </div>
             )}
 
             <ul className="mt-10 space-y-4">

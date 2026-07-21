@@ -10,9 +10,11 @@
 
 - [x] Integración Firebase Firestore + Storage — 2026-07-21
 
+- [x] Subida de carteles y eliminación editorial protegida — 2026-07-21
+
 ## Pendientes
 
-- [ ] Desplegar reglas de `firebase/firestore.rules` y `firebase/storage.rules` en Firebase Console
+- [ ] Desplegar reglas actualizadas de `firebase/firestore.rules` y `firebase/storage.rules` en Firebase Console
 - [ ] Configurar las mismas variables `VITE_FIREBASE_*` en el hosting al desplegar
 - [ ] Autenticación de usuarios investigadores
 - [ ] Configurar CI/CD

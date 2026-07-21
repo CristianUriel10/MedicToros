@@ -1,6 +1,8 @@
 import {
   collection,
+  deleteDoc,
   doc,
+  getDoc,
   getDocs,
   orderBy,
   query,
@@ -8,7 +10,7 @@ import {
   setDoc,
   type DocumentData,
 } from 'firebase/firestore'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import type { JournalDocument, MedicalJournal, UploadJournalInput } from '../../types/portal'
 import { formatFileSize } from '../../utils/format-file-size'
 import { sanitizeFileName } from '../../utils/sanitize-file-name'
@@ -106,4 +108,27 @@ export async function uploadJournalToFirestore(
     fileSize: journalData.fileSize,
     fileUrl: journalData.fileUrl,
   }
+}
+
+/**
+ * Elimina un artículo de Firestore y su PDF en Storage
+ * @param journalId - ID del documento a eliminar
+ */
+export async function deleteJournalFromFirestore(journalId: string): Promise<void> {
+  const db = getFirestoreDb()
+  const storage = getFirebaseStorage()
+  const journalRef = doc(db, JOURNALS_COLLECTION, journalId)
+  const snapshot = await getDoc(journalRef)
+
+  if (!snapshot.exists()) {
+    throw new Error('El artículo no existe o ya fue eliminado.')
+  }
+
+  const journal = snapshot.data() as JournalDocument
+
+  if (journal.storagePath) {
+    await deleteObject(ref(storage, journal.storagePath))
+  }
+
+  await deleteDoc(journalRef)
 }

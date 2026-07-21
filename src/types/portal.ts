@@ -58,6 +58,14 @@ export interface UploadJournalInput {
   file: File
 }
 
+export interface UploadPosterInput {
+  title: string
+  category: string
+  event: string
+  abstract: string
+  file: File
+}
+
 export interface Poster {
   id: string
   title: string
@@ -95,3 +103,18 @@ export const journalCategories = [
 ] as const
 
 export type JournalCategory = (typeof journalCategories)[number]
+
+export const posterCategories = [
+  'Congreso',
+  'Simposio',
+  'Jornada',
+  'Medicina General',
+  'Cardiología',
+  'Neurología',
+  'Oncología',
+  'Pediatría',
+  'Investigación Clínica',
+  'Salud Pública',
+] as const
+
+export type PosterCategory = (typeof posterCategories)[number]

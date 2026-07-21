@@ -7,6 +7,9 @@ interface PublicationCardProps {
   meta: string
   readPath: string
   hasPdf: boolean
+  canDelete?: boolean
+  isDeleting?: boolean
+  onDelete?: () => void
 }
 
 /**
@@ -20,8 +23,11 @@ export function PublicationCard({
   meta,
   readPath,
   hasPdf,
+  canDelete = false,
+  isDeleting = false,
+  onDelete,
 }: PublicationCardProps) {
-  const cardContent = (
+  const cardBody = (
     <>
       <PublicationCover category={category} label={category} />
       <div className="flex flex-1 flex-col p-5">
@@ -46,20 +52,29 @@ export function PublicationCard({
     </>
   )
 
-  if (!hasPdf) {
-    return (
-      <article className="flex flex-col overflow-hidden rounded-sm bg-navy-800/50">
-        {cardContent}
-      </article>
-    )
-  }
-
   return (
-    <Link
-      to={readPath}
-      className="group flex flex-col overflow-hidden rounded-sm bg-navy-800/50 transition-transform hover:-translate-y-1 hover:shadow-lg"
-    >
-      {cardContent}
-    </Link>
+    <article className="relative flex flex-col overflow-hidden rounded-sm bg-navy-800/50">
+      {canDelete && onDelete && (
+        <button
+          type="button"
+          disabled={isDeleting}
+          onClick={onDelete}
+          className="absolute right-3 top-3 z-10 rounded-sm border border-accent-500/40 bg-navy-950/90 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-accent-500 transition-colors hover:bg-accent-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {isDeleting ? 'Eliminando...' : 'Eliminar'}
+        </button>
+      )}
+
+      {!hasPdf ? (
+        cardBody
+      ) : (
+        <Link
+          to={readPath}
+          className="group flex h-full flex-col transition-transform hover:-translate-y-1 hover:shadow-lg"
+        >
+          {cardBody}
+        </Link>
+      )}
+    </article>
   )
 }

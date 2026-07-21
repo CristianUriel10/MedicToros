@@ -8,9 +8,11 @@ interface UseJournalsResult {
   journals: MedicalJournal[]
   isLoading: boolean
   isUploading: boolean
+  isDeleting: boolean
   error: string | null
   isFirebaseEnabled: boolean
   uploadJournal: (input: UploadJournalInput) => Promise<void>
+  deleteJournal: (journalId: string) => Promise<void>
   refreshJournals: () => Promise<void>
 }
 
@@ -30,6 +32,7 @@ export function useJournals(): UseJournalsResult {
   const [journals, setJournals] = useState<MedicalJournal[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isUploading, setIsUploading] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const isFirebaseEnabled = isFirebaseConfigured()
 
@@ -109,13 +112,43 @@ export function useJournals(): UseJournalsResult {
     [isFirebaseEnabled],
   )
 
+  const deleteJournal = useCallback(
+    async (journalId: string) => {
+      setError(null)
+      setIsDeleting(true)
+
+      try {
+        if (isFirebaseEnabled) {
+          const { deleteJournalFromFirestore } = await import(
+            '../services/firebase/journals-service'
+          )
+          await deleteJournalFromFirestore(journalId)
+        }
+
+        setJournals((current) => current.filter((journal) => journal.id !== journalId))
+      } catch (deleteError) {
+        const message =
+          deleteError instanceof Error
+            ? deleteError.message
+            : 'No se pudo eliminar el artículo.'
+        setError(message)
+        throw deleteError
+      } finally {
+        setIsDeleting(false)
+      }
+    },
+    [isFirebaseEnabled],
+  )
+
   return {
     journals,
     isLoading,
     isUploading,
+    isDeleting,
     error,
     isFirebaseEnabled,
     uploadJournal,
+    deleteJournal,
     refreshJournals,
   }
 }
