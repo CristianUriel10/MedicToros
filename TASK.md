@@ -14,6 +14,7 @@
 
 ## Pendientes
 
+- [ ] Aplicar CORS del bucket Storage: `bash firebase/apply-storage-cors.sh` (ver `firebase/storage.cors.json`)
 - [ ] Desplegar reglas actualizadas de `firebase/firestore.rules` y `firebase/storage.rules` en Firebase Console
 - [ ] Configurar las mismas variables `VITE_FIREBASE_*` en el hosting al desplegar
 - [ ] Autenticación de usuarios investigadores
