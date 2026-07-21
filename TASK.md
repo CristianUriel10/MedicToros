@@ -3,16 +3,23 @@
 ## Completadas
 
 - [x] Crear proyecto React + Vite + TypeScript — 2026-07-21
-- [x] Implementar landing page genérica Medic Toro — 2026-07-21
-- [x] Configurar Tailwind CSS v4 — 2026-07-21
-- [x] Agregar pruebas unitarias básicas — 2026-07-21
+- [x] Landing page inicial — 2026-07-21
+- [x] Refactorizar a portal de revistas de investigación médica — 2026-07-21
+- [x] Catálogo con búsqueda y filtros — 2026-07-21
+- [x] Formulario de subida de revistas PDF — 2026-07-21
+
+- [x] Integración Firebase Firestore + Storage — 2026-07-21
 
 ## Pendientes
 
-- [ ] Conectar formulario de contacto a API real
-- [ ] Agregar imágenes reales de la clínica
+- [ ] Instalar dependencia `firebase` (`npm install`)
+- [ ] Configurar proyecto en Firebase Console y archivo `.env`
+- [ ] Desplegar reglas de `firebase/firestore.rules` y `firebase/storage.rules`
+- [ ] Autenticación de usuarios investigadores
 - [ ] Configurar CI/CD
 
 ## Descubierto Durante el Trabajo
 
-- El formulario de contacto muestra confirmación local sin envío a servidor
+- Sin `.env`, el portal funciona en modo local con datos de ejemplo
+- Los PDF se almacenan en Firebase Storage, no directamente en Firestore
+- Las revistas de ejemplo no tienen PDF descargable hasta subirse a Firebase

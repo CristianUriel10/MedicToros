@@ -8,7 +8,7 @@ describe('HeroSection', () => {
 
     expect(
       screen.getByRole('heading', {
-        name: /cuidamos la salud de tus toros con excelencia/i,
+        name: /ciencia que impulsa la salud/i,
       }),
     ).toBeInTheDocument()
   })
@@ -16,19 +16,15 @@ describe('HeroSection', () => {
   it('renders call-to-action links', () => {
     render(<HeroSection />)
 
-    expect(screen.getByRole('link', { name: /solicitar consulta/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /ver últimos artículos/i })).toHaveAttribute(
       'href',
-      '#contacto',
-    )
-    expect(screen.getByRole('link', { name: /ver servicios/i })).toHaveAttribute(
-      'href',
-      '#servicios',
+      '#articulos',
     )
   })
 
-  it('renders feature list items', () => {
+  it('renders the bull logo', () => {
     render(<HeroSection />)
 
-    expect(screen.getByText(/diagnóstico clínico y de laboratorio/i)).toBeInTheDocument()
+    expect(screen.getByAltText(/logo medictoros/i)).toBeInTheDocument()
   })
 })

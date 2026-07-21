@@ -2,40 +2,41 @@
 
 ## Visión General
 
-La landing page es de una sola página con navegación por anclas. El usuario llega, conoce los servicios y puede contactar a la clínica.
+Portal de una sola página donde investigadores y profesionales médicos pueden consultar y publicar revistas de investigación.
 
 ## Flujo Principal
 
 ```mermaid
 flowchart TD
-    A[Llegada a la página] --> B[Hero - Propuesta de valor]
+    A[Llegada al portal] --> B[Hero - Propuesta de valor]
     B --> C{¿Qué busca el usuario?}
-    C -->|Conocer servicios| D[Sección Servicios]
-    C -->|Conocer la clínica| E[Sección Nosotros]
-    C -->|Contactar| F[Sección Contacto]
-    D --> F
-    E --> F
-    F --> G[Completa formulario]
-    G --> H[Mensaje de confirmación]
+    C -->|Explorar| D[Catálogo de revistas]
+    C -->|Publicar| E[Formulario de subida]
+    C -->|Conocer el portal| F[Sección Acerca de]
+    D --> G[Buscar / filtrar revistas]
+    G --> H[Ver detalle y descargar PDF]
+    E --> I[Completar metadatos + PDF]
+    I --> J[Revista aparece en catálogo]
 ```
 
 ## Secciones
 
-| Sección    | ID          | Acción del usuario                    |
-|-----------|-------------|---------------------------------------|
-| Inicio    | `#inicio`   | Lee propuesta de valor, CTAs          |
-| Servicios | `#servicios`| Explora tarjetas de servicios         |
-| Nosotros  | `#nosotros` | Conoce estadísticas y valores         |
-| Contacto  | `#contacto` | Envía formulario o ve datos directos|
+| Sección          | ID            | Acción del usuario                         |
+|------------------|---------------|--------------------------------------------|
+| Inicio           | `#inicio`     | Conoce el portal, CTAs principales         |
+| Revistas         | `#revistas`   | Busca, filtra y consulta publicaciones     |
+| Subir            | `#subir`      | Publica una nueva revista en PDF           |
+| Acerca de        | `#nosotros`   | Conoce la misión y estadísticas del portal   |
 
-## Navegación
+## Subida de Revista
 
-- **Header sticky**: enlaces a cada sección + botón "Agendar cita"
-- **Menú móvil**: hamburguesa en pantallas pequeñas
-- **Footer**: enlaces repetidos y copyright
+1. Usuario completa título, autores, especialidad, edición y resumen
+2. Adjunta archivo PDF
+3. Al enviar, la revista se agrega al catálogo inmediatamente
+4. Los datos persisten solo en la sesión actual (sin backend aún)
 
-## Formulario de Contacto
+## Catálogo
 
-1. Usuario completa nombre, email, teléfono (opcional) y mensaje
-2. Al enviar, se muestra mensaje de éxito
-3. Los campos se reinician (sin envío real a servidor por ahora)
+1. Usuario busca por texto o filtra por especialidad médica
+2. Ve tarjetas con metadatos de cada revista
+3. Puede descargar PDF (placeholder hasta integrar almacenamiento)

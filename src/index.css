@@ -1,15 +1,17 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-brand-50: #fef2f2;
-  --color-brand-100: #fee2e2;
-  --color-brand-500: #b91c1c;
-  --color-brand-600: #991b1b;
-  --color-brand-700: #7f1d1d;
-  --color-brand-800: #450a0a;
-  --color-accent-500: #059669;
-  --color-accent-600: #047857;
-  --font-sans: 'Segoe UI', system-ui, sans-serif;
+  --color-navy-950: #030b18;
+  --color-navy-900: #05122b;
+  --color-navy-800: #0a192f;
+  --color-navy-700: #112240;
+  --color-accent-500: #c1121f;
+  --color-accent-600: #9b0f19;
+  --color-accent-700: #7a0c14;
+  --color-surface-100: #f5f7fa;
+  --color-surface-200: #e8edf3;
+  --font-display: 'Oswald', 'Segoe UI', sans-serif;
+  --font-sans: 'Inter', 'Segoe UI', sans-serif;
 }
 
 html {
@@ -21,4 +23,29 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+}
+
+.medical-pattern {
+  background-color: #f5f7fa;
+  background-image: url('/assets/bull-logo.png');
+  background-size: 420px;
+  background-repeat: repeat;
+  background-position: center;
+  background-blend-mode: overlay;
+  opacity: 1;
+}
+
+.medical-pattern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(245, 247, 250, 0.92);
+  pointer-events: none;
 }
