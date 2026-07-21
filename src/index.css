@@ -1,0 +1,24 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-brand-50: #fef2f2;
+  --color-brand-100: #fee2e2;
+  --color-brand-500: #b91c1c;
+  --color-brand-600: #991b1b;
+  --color-brand-700: #7f1d1d;
+  --color-brand-800: #450a0a;
+  --color-accent-500: #059669;
+  --color-accent-600: #047857;
+  --font-sans: 'Segoe UI', system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
