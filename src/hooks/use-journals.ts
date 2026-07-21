@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { sampleJournals } from '../data/sample-journals'
 import { isFirebaseConfigured } from '../services/firebase/config'
 import type { MedicalJournal, UploadJournalInput } from '../types/portal'
+import { formatFileSize } from '../utils/format-file-size'
 import { formatStorageUploadError } from '../utils/format-storage-upload-error'
 
 interface UseJournalsResult {
