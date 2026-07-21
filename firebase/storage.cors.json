@@ -3,6 +3,7 @@
     "origin": [
       "http://localhost:5173",
       "http://localhost:4173",
+      "https://medictoro.netlify.app",
       "https://medictoros.netlify.app"
     ],
     "method": ["GET", "HEAD", "PUT", "POST", "DELETE"],
