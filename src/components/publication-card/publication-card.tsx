@@ -10,9 +10,9 @@ interface PublicationCardProps {
 }
 
 /**
- * Tarjeta reutilizable para artículos y carteles
+ * Tarjeta reutilizable que navega a una página de lectura dedicada
  * @param props - Datos de la publicación y ruta de lectura
- * @returns {JSX.Element} Card con enlace al lector
+ * @returns {JSX.Element} Card con enlace a página completa
  */
 export function PublicationCard({
   title,
@@ -21,8 +21,8 @@ export function PublicationCard({
   readPath,
   hasPdf,
 }: PublicationCardProps) {
-  return (
-    <article className="group flex flex-col overflow-hidden rounded-sm bg-navy-800/50">
+  const cardContent = (
+    <>
       <PublicationCover category={category} label={category} />
       <div className="flex flex-1 flex-col p-5">
         <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-accent-500">
@@ -32,12 +32,9 @@ export function PublicationCard({
         <p className="mt-2 text-xs text-white/50">{meta}</p>
         <div className="mt-auto flex items-center justify-between pt-6">
           {hasPdf ? (
-            <Link
-              to={readPath}
-              className="text-xs font-semibold uppercase tracking-wider text-white/70 transition-colors hover:text-white"
-            >
-              Leer PDF →
-            </Link>
+            <span className="text-xs font-semibold uppercase tracking-wider text-white/70 transition-colors group-hover:text-white">
+              Abrir página de lectura →
+            </span>
           ) : (
             <span className="text-xs text-white/40">Próximamente</span>
           )}
@@ -46,6 +43,23 @@ export function PublicationCard({
           </span>
         </div>
       </div>
-    </article>
+    </>
+  )
+
+  if (!hasPdf) {
+    return (
+      <article className="flex flex-col overflow-hidden rounded-sm bg-navy-800/50">
+        {cardContent}
+      </article>
+    )
+  }
+
+  return (
+    <Link
+      to={readPath}
+      className="group flex flex-col overflow-hidden rounded-sm bg-navy-800/50 transition-transform hover:-translate-y-1 hover:shadow-lg"
+    >
+      {cardContent}
+    </Link>
   )
 }

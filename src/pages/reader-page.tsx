@@ -1,17 +1,16 @@
 import { Link, useParams } from 'react-router-dom'
 import { usePublications } from '../context/publications-context'
 import type { PublicationKind } from '../types/portal'
-import { Header } from '../components/header/header'
-import { PrimaryButton } from '../components/ui/primary-button'
+import { BrandLogo } from '../components/ui/brand-logo'
 
 interface ReaderPageProps {
   kind: PublicationKind
 }
 
 /**
- * Página de lectura de PDF para artículos o carteles
+ * Página dedicada de lectura de PDF (ruta propia, no modal)
  * @param props - Tipo de publicación a mostrar
- * @returns {JSX.Element} Visor de PDF en página aparte
+ * @returns {JSX.Element} Visor de PDF a pantalla completa
  */
 export function ReaderPage({ kind }: ReaderPageProps) {
   const { id = '' } = useParams()
@@ -20,47 +19,59 @@ export function ReaderPage({ kind }: ReaderPageProps) {
   const publication =
     kind === 'articulos' ? findArticle(id) : findPoster(id)
 
-  const backHref = kind === 'articulos' ? '/#articulos' : '/#carteles'
-  const label = kind === 'articulos' ? 'Artículo' : 'Cartel'
+  const listPath = kind === 'articulos' ? '/articulos' : '/carteles'
+  const listLabel = kind === 'articulos' ? 'Artículos' : 'Carteles'
+  const typeLabel = kind === 'articulos' ? 'Artículo' : 'Cartel'
 
   return (
-    <div className="min-h-screen bg-navy-950">
-      <Header />
-      <main className="mx-auto max-w-7xl px-6 py-8 lg:px-10">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-          <PrimaryButton href={backHref}>Volver al inicio</PrimaryButton>
-          {publication?.fileUrl && (
-            <a
-              href={publication.fileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm font-semibold uppercase tracking-wider text-white/70 hover:text-white"
-            >
-              Abrir PDF en nueva pestaña →
-            </a>
-          )}
-        </div>
-
-        {!publication ? (
-          <div className="rounded-sm border border-white/10 bg-navy-900 p-10 text-center">
-            <h1 className="text-2xl font-bold text-white">{label} no encontrado</h1>
-            <p className="mt-4 text-white/60">
-              La publicación que buscas no existe o fue eliminada.
-            </p>
+    <div className="flex min-h-screen flex-col bg-navy-950">
+      <header className="border-b border-white/10 bg-navy-900 px-6 py-4 lg:px-10">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
+          <Link to="/">
+            <BrandLogo variant="wordmark" surface="dark" />
+          </Link>
+          <div className="flex flex-wrap items-center gap-4">
             <Link
-              to="/"
-              className="mt-6 inline-block text-sm font-semibold uppercase tracking-wider text-accent-500"
+              to={listPath}
+              className="text-xs font-semibold uppercase tracking-[0.15em] text-white/70 transition-colors hover:text-white"
             >
-              Ir al inicio
+              ← Volver a {listLabel}
             </Link>
+            {publication?.fileUrl && (
+              <a
+                href={publication.fileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-semibold uppercase tracking-[0.15em] text-accent-500 hover:text-accent-400"
+              >
+                Abrir en nueva pestaña
+              </a>
+            )}
           </div>
-        ) : (
-          <>
-            <div className="mb-6 border-b border-white/10 pb-6">
+        </div>
+      </header>
+
+      {!publication ? (
+        <main className="mx-auto flex max-w-3xl flex-1 flex-col items-center justify-center px-6 py-20 text-center">
+          <h1 className="text-3xl font-bold text-white">{typeLabel} no encontrado</h1>
+          <p className="mt-4 text-white/60">
+            La publicación que buscas no existe o fue eliminada.
+          </p>
+          <Link
+            to={listPath}
+            className="mt-8 text-sm font-semibold uppercase tracking-wider text-accent-500"
+          >
+            Ir al catálogo de {listLabel.toLowerCase()}
+          </Link>
+        </main>
+      ) : (
+        <>
+          <section className="border-b border-white/10 bg-navy-900 px-6 py-6 lg:px-10">
+            <div className="mx-auto max-w-7xl">
               <span className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-500">
-                {label}
+                {typeLabel}
               </span>
-              <h1 className="mt-2 text-3xl font-bold text-white md:text-4xl">
+              <h1 className="mt-2 text-2xl font-bold text-white md:text-3xl">
                 {publication.title}
               </h1>
               {'authors' in publication && (
@@ -69,25 +80,24 @@ export function ReaderPage({ kind }: ReaderPageProps) {
               {'event' in publication && (
                 <p className="mt-2 text-sm text-white/60">{publication.event}</p>
               )}
-              <p className="mt-2 text-xs text-white/40">{publication.fileName}</p>
             </div>
+          </section>
 
+          <main className="flex-1">
             {publication.fileUrl ? (
-              <div className="overflow-hidden rounded-sm border border-white/10 bg-white">
-                <iframe
-                  title={`Lectura de ${publication.title}`}
-                  src={publication.fileUrl}
-                  className="h-[80vh] w-full"
-                />
-              </div>
+              <iframe
+                title={`Lectura de ${publication.title}`}
+                src={publication.fileUrl}
+                className="h-[calc(100vh-180px)] min-h-[600px] w-full border-0 bg-white"
+              />
             ) : (
-              <div className="rounded-sm border border-dashed border-white/20 p-10 text-center text-white/60">
+              <div className="flex h-[calc(100vh-180px)] items-center justify-center px-6 text-white/60">
                 El PDF de esta publicación aún no está disponible.
               </div>
             )}
-          </>
-        )}
-      </main>
+          </main>
+        </>
+      )}
     </div>
   )
 }

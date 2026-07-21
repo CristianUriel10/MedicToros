@@ -1,4 +1,5 @@
 import { PublicationCard } from '../publication-card/publication-card'
+import { PrimaryButton } from '../ui/primary-button'
 import { SectionLabel } from '../ui/section-label'
 import type { MedicalJournal } from '../../types/portal'
 
@@ -8,12 +9,12 @@ interface ArticlesSectionProps {
 }
 
 /**
- * Sección de últimos artículos publicados
+ * Vista previa de artículos en la página principal
  * @param props - Lista de revistas del catálogo
- * @returns {JSX.Element} Grid de artículos
+ * @returns {JSX.Element} Grid de artículos destacados
  */
 export function ArticlesSection({ journals, isLoading = false }: ArticlesSectionProps) {
-  const featuredJournals = journals.slice(0, 6)
+  const featuredJournals = journals.slice(0, 3)
 
   return (
     <section id="articulos" className="bg-navy-900 px-6 py-20 lg:px-10 lg:py-24">
@@ -30,18 +31,23 @@ export function ArticlesSection({ journals, isLoading = false }: ArticlesSection
             Aún no hay artículos publicados. Sé el primero en enviar tu investigación.
           </p>
         ) : (
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {featuredJournals.map((journal) => (
-              <PublicationCard
-                key={journal.id}
-                title={journal.title}
-                category={journal.category}
-                meta={journal.issue}
-                readPath={`/articulos/${journal.id}`}
-                hasPdf={Boolean(journal.fileUrl)}
-              />
-            ))}
-          </div>
+          <>
+            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {featuredJournals.map((journal) => (
+                <PublicationCard
+                  key={journal.id}
+                  title={journal.title}
+                  category={journal.category}
+                  meta={journal.issue}
+                  readPath={`/articulos/${journal.id}`}
+                  hasPdf={Boolean(journal.fileUrl)}
+                />
+              ))}
+            </div>
+            <div className="mt-10 text-center">
+              <PrimaryButton href="/articulos">Ver todos los artículos</PrimaryButton>
+            </div>
+          </>
         )}
       </div>
     </section>

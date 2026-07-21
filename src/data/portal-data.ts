@@ -1,12 +1,12 @@
 import type { EditorialMember, FooterColumn, NavLink, SubmissionFeature } from '../types/portal'
 
 export const navLinks: NavLink[] = [
-  { label: 'Inicio', href: '#inicio' },
-  { label: 'Artículos', href: '#articulos' },
-  { label: 'Carteles', href: '#carteles' },
-  { label: 'Ediciones', href: '#ediciones' },
-  { label: 'Envío de trabajos', href: '#envio' },
-  { label: 'Equipo editorial', href: '#equipo' },
+  { label: 'Inicio', href: '/' },
+  { label: 'Artículos', href: '/articulos' },
+  { label: 'Carteles', href: '/carteles' },
+  { label: 'Ediciones', href: '/#ediciones' },
+  { label: 'Envío de trabajos', href: '/#envio' },
+  { label: 'Equipo editorial', href: '/#equipo' },
 ]
 
 export const submissionFeatures: SubmissionFeature[] = [
@@ -47,9 +47,9 @@ export const footerColumns: FooterColumn[] = [
   {
     title: 'Navegación',
     links: [
-      { label: 'Inicio', href: '/#inicio' },
-      { label: 'Artículos', href: '/#articulos' },
-      { label: 'Carteles', href: '/#carteles' },
+      { label: 'Inicio', href: '/' },
+      { label: 'Artículos', href: '/articulos' },
+      { label: 'Carteles', href: '/carteles' },
       { label: 'Envío de trabajos', href: '/#envio' },
     ],
   },

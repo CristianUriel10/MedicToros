@@ -1,15 +1,15 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import { navLinks } from '../../data/portal-data'
 import { BrandLogo } from '../ui/brand-logo'
 
 /**
- * Resuelve enlaces internos para funcionar desde cualquier ruta
- * @param href - Enlace del menú
- * @returns {string} URL compatible con React Router
+ * Resuelve si un enlace del menú es ruta interna o ancla en inicio
+ * @param href - Enlace configurado en navegación
+ * @returns {boolean} true si es ruta de React Router
  */
-function resolveNavHref(href: string): string {
-  return href.startsWith('#') ? `/${href}` : href
+function isInternalRoute(href: string): boolean {
+  return href.startsWith('/') && !href.includes('#')
 }
 
 /**
@@ -30,15 +30,25 @@ export function Header() {
           className="hidden items-center gap-6 xl:flex"
           aria-label="Navegación principal"
         >
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={resolveNavHref(link.href)}
-              className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80 transition-colors hover:text-white"
-            >
-              {link.label}
-            </a>
-          ))}
+          {navLinks.map((link) =>
+            isInternalRoute(link.href) ? (
+              <Link
+                key={link.href}
+                to={link.href}
+                className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80 transition-colors hover:text-white"
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80 transition-colors hover:text-white"
+              >
+                {link.label}
+              </a>
+            ),
+          )}
         </nav>
 
         <button
@@ -64,13 +74,23 @@ export function Header() {
           <ul className="flex flex-col gap-4">
             {navLinks.map((link) => (
               <li key={link.href}>
-                <a
-                  href={resolveNavHref(link.href)}
-                  className="block text-sm font-semibold uppercase tracking-wider text-white/80"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {link.label}
-                </a>
+                {isInternalRoute(link.href) ? (
+                  <Link
+                    to={link.href}
+                    className="block text-sm font-semibold uppercase tracking-wider text-white/80"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    href={link.href}
+                    className="block text-sm font-semibold uppercase tracking-wider text-white/80"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                )}
               </li>
             ))}
           </ul>
