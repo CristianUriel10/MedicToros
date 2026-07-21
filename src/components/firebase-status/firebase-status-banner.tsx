@@ -1,4 +1,6 @@
 import { getFirebaseConfig } from '../../services/firebase/config'
+import { isSupabaseStorageConfigured } from '../../services/supabase/config'
+import { isUsingFirebaseEmulators } from '../../services/firebase/firebase-client'
 
 interface FirebaseStatusBannerProps {
   isFirebaseEnabled: boolean
@@ -27,10 +29,15 @@ export function FirebaseStatusBanner({
 
   if (isFirebaseEnabled) {
     const projectId = getFirebaseConfig().projectId
+    const storageLabel = isSupabaseStorageConfigured()
+      ? ' — PDFs en Supabase (gratis)'
+      : isUsingFirebaseEmulators()
+        ? ' — emuladores locales'
+        : ' — PDFs vía servidor Firebase'
 
     return (
       <div className="bg-green-900/80 px-4 py-2 text-center text-xs text-green-200">
-        Conectado a Firebase ({projectId}) — datos desde Firestore y PDFs en Storage
+        Conectado a Firebase ({projectId}){storageLabel}
       </div>
     )
   }

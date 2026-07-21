@@ -10,11 +10,11 @@ import {
   setDoc,
   type DocumentData,
 } from 'firebase/firestore'
-import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import type { Poster, PosterDocument, UploadPosterInput } from '../../types/portal'
 import { formatFileSize } from '../../utils/format-file-size'
 import { sanitizeFileName } from '../../utils/sanitize-file-name'
-import { getFirebaseStorage, getFirestoreDb } from './firebase-client'
+import { getFirestoreDb } from './firebase-client'
+import { uploadPdfFile, deletePdfFile } from '../pdf-storage/pdf-storage-service'
 
 const POSTERS_COLLECTION = 'posters'
 
@@ -64,18 +64,12 @@ export async function fetchPostersFromFirestore(): Promise<Poster[]> {
  */
 export async function uploadPosterToFirestore(input: UploadPosterInput): Promise<Poster> {
   const db = getFirestoreDb()
-  const storage = getFirebaseStorage()
   const posterId = crypto.randomUUID()
   const safeFileName = sanitizeFileName(input.file.name)
   const storagePath = `posters/${posterId}/${safeFileName}`
   const publishedAt = new Date().toISOString().split('T')[0] ?? ''
 
-  const storageRef = ref(storage, storagePath)
-  await uploadBytes(storageRef, input.file, {
-    contentType: 'application/pdf',
-  })
-
-  const fileUrl = await getDownloadURL(storageRef)
+  const fileUrl = await uploadPdfFile(storagePath, input.file)
   const posterData = {
     title: input.title,
     category: input.category,
@@ -110,7 +104,6 @@ export async function uploadPosterToFirestore(input: UploadPosterInput): Promise
  */
 export async function deletePosterFromFirestore(posterId: string): Promise<void> {
   const db = getFirestoreDb()
-  const storage = getFirebaseStorage()
   const posterRef = doc(db, POSTERS_COLLECTION, posterId)
   const snapshot = await getDoc(posterRef)
 
@@ -121,7 +114,7 @@ export async function deletePosterFromFirestore(posterId: string): Promise<void>
   const poster = snapshot.data() as PosterDocument
 
   if (poster.storagePath) {
-    await deleteObject(ref(storage, poster.storagePath))
+    await deletePdfFile(poster.storagePath)
   }
 
   await deleteDoc(posterRef)

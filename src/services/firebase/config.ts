@@ -24,11 +24,7 @@ const firebaseConfig: FirebaseConfig = {
  * @returns {boolean} true si Firebase puede inicializarse
  */
 export function isFirebaseConfigured(): boolean {
-  return Boolean(
-    firebaseConfig.apiKey &&
-      firebaseConfig.projectId &&
-      firebaseConfig.storageBucket,
-  )
+  return Boolean(firebaseConfig.apiKey && firebaseConfig.projectId)
 }
 
 /**

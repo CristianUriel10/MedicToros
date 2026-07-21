@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:local": "firebase emulators:exec --only firestore,storage --project medicotoros \"env VITE_USE_FIREBASE_EMULATORS=true vite\"",
+    "emulators": "firebase emulators:start --only firestore,storage --project medicotoros",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
@@ -12,12 +14,15 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.8",
     "firebase": "^11.10.0",
+    "firebase-admin": "^13.4.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1"
   },
   "devDependencies": {
+    "@netlify/functions": "^4.2.0",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",

@@ -2,6 +2,20 @@
   command = "npm run build"
   publish = "dist"
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/upload-pdf"
+  to = "/.netlify/functions/upload-pdf"
+  status = 200
+
+[[redirects]]
+  from = "/api/delete-pdf"
+  to = "/.netlify/functions/delete-pdf"
+  status = 200
+
 # React Router: rutas como /articulos/:id deben servir index.html
 [[redirects]]
   from = "/*"

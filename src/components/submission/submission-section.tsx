@@ -12,6 +12,7 @@ import {
 } from './article-upload-form'
 import { PosterUploadForm, type PosterFormState } from './poster-upload-form'
 import { SubmissionAccessForm } from './submission-access-form'
+import { formatStorageUploadError } from '../../utils/format-storage-upload-error'
 
 const featureIcons: Record<SubmissionFeature['icon'], string> = {
   review: '◎',
@@ -140,9 +141,7 @@ export function SubmissionSection() {
       setArticleFile(null)
       setArticleSubmitted(true)
     } catch (uploadError) {
-      const message =
-        uploadError instanceof Error ? uploadError.message : 'No se pudo enviar el artículo.'
-      setArticleError(message)
+      setArticleError(formatStorageUploadError(uploadError))
     }
   }
 
@@ -168,9 +167,7 @@ export function SubmissionSection() {
       setPosterFile(null)
       setPosterSubmitted(true)
     } catch (uploadError) {
-      const message =
-        uploadError instanceof Error ? uploadError.message : 'No se pudo enviar el cartel.'
-      setPosterError(message)
+      setPosterError(formatStorageUploadError(uploadError))
     }
   }
 
