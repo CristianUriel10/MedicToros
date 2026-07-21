@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom'
 import { usePublications } from '../context/publications-context'
+import { PublicationCard } from '../components/publication-card/publication-card'
+import { PageShell } from '../components/layout/page-shell'
 
 /**
  * Página completa del catálogo de artículos
